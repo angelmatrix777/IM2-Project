@@ -1,3 +1,5 @@
 # IM2-Project
 
-Tee Hee Gang! Lets Gaur
+***
+To open website:
+http://localhost/
