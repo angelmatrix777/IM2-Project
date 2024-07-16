@@ -1,93 +1,58 @@
 <?php
-require_once 'db.php';
+include 'db.php';
 
-// Function to fetch customer records
-function fetchCustomers($conn) {
-    $sql = "SELECT * FROM CUSTOMERS";
-    $result = $conn->query($sql);
-    $customers = [];
-
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $customers[] = $row;
-        }
-    }
-
-    echo json_encode([
-        'status' => 'success',
-        'records' => $customers
-    ]);
-}
-
-// Function to add a new customer record
-function addCustomer($conn) {
-    $id = $_POST['customer_id'];
-    $name = $_POST['customer_name'];
-    $contact_number = $_POST['customer_contact_num'];
-    $email = $_POST['customer_email'];
-    $credibility_status = $_POST['credibility_status'];
-
-    $sql = "INSERT INTO CUSTOMERS (id, name, contact_number, email, credibility_status)
-            VALUES ('$id', '$name', '$contact_number', '$email', '$credibility_status')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => $conn->error]);
-    }
-}
-
-// Function to update an existing customer record
-function updateCustomer($conn) {
-    $id = $_POST['customer_id'];
-    $name = $_POST['customer_name'];
-    $contact_number = $_POST['customer_contact_num'];
-    $email = $_POST['customer_email'];
-    $credibility_status = $_POST['credibility_status'];
-
-    $sql = "UPDATE CUSTOMERS
-            SET name='$name', contact_number='$contact_number', email='$email', credibility_status='$credibility_status'
-            WHERE id='$id'";
-
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => $conn->error]);
-    }
-}
-
-// Function to delete a customer record
-function deleteCustomer($conn) {
-    $id = $_POST['customer_id'];
-
-    $sql = "DELETE FROM CUSTOMERS WHERE id='$id'";
-
-    if ($conn->query($sql) === TRUE) {
-        echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => $conn->error]);
-    }
-}
-
-// Handle the incoming request
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'];
 
     switch ($action) {
-        case 'fetch':
-            fetchCustomers($conn);
-            break;
         case 'add':
-            addCustomer($conn);
+            $name = $_POST['name'];
+            $contactNumber = $_POST['contact_number'];
+            $email = $_POST['email'];
+            $credibility = $_POST['credibility_status'] === 'Trusted' ? 1 : 0;
+
+            $sql = "INSERT INTO CUSTOMERS (name, contact_number, email, credibility_status) VALUES ('$name', '$contactNumber', '$email', '$credibility')";
+            if ($conn->query($sql) === TRUE) {
+                echo "New record created successfully";
+            } else {
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
             break;
-        case 'update':
-            updateCustomer($conn);
+
+        case 'edit':
+            $id = $_POST['customer_id'];
+            $name = $_POST['name'];
+            $contactNumber = $_POST['contact_number'];
+            $email = $_POST['email'];
+            $credibility = $_POST['credibility_status'] === 'Trusted' ? 1 : 0;
+
+            $sql = "UPDATE CUSTOMERS SET name='$name', contact_number='$contactNumber', email='$email', credibility_status='$credibility' WHERE id='$id'";
+            if ($conn->query($sql) === TRUE) {
+                echo "Record updated successfully";
+            } else {
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
             break;
+
         case 'delete':
-            deleteCustomer($conn);
+            $id = $_POST['customer_id'];
+            $sql = "DELETE FROM CUSTOMERS WHERE id='$id'";
+            if ($conn->query($sql) === TRUE) {
+                echo "Record deleted successfully";
+            } else {
+                echo "Error: " . $sql . "<br>" . $conn->error;
+            }
             break;
-        default:
-            echo json_encode(['status' => 'error', 'message' => 'Invalid action']);
+
+        case 'read':
+            $result = $conn->query("SELECT * FROM CUSTOMERS");
+            $customers = array();
+            while ($row = $result->fetch_assoc()) {
+                $row['credibility_status'] = $row['credibility_status'] == 1 ? 'Trusted' : 'Not Trusted';
+                $customers[] = $row;
+            }
+            echo json_encode($customers);
+            break;
     }
 }
 

@@ -1,65 +1,40 @@
 <?php
-// Connect to database
-require_once 'db.php';
+include 'db.php';
 
-// Retrieve data from database
-$salesData = array();
-$inventoryData = array();
-$productionData = array();
-
-// Check if tables exist
-if ($conn->query("SHOW TABLES LIKE 'ales_data_logs'")->num_rows > 0) {
-    $sql = "SELECT * FROM sales_data_logs";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $salesData[] = array(
-                'time' => $row['time'],
-                'employeeId' => $row['employee_id'],
-                'employeeName' => $row['employee_name'],
-                'task' => $row['task']
-            );
-        }
-    }
+// Fetch data from DATA_LOGS_SALES
+$salesQuery = "SELECT time, employee_id AS employeeId, employee_name AS employeeName, task FROM DATA_LOGS_SALES";
+$salesResult = $conn->query($salesQuery);
+$salesData = [];
+while ($row = $salesResult->fetch_assoc()) {
+    $salesData[] = $row;
 }
 
-if ($conn->query("SHOW TABLES LIKE 'inventory_data_logs'")->num_rows > 0) {
-    $sql = "SELECT * FROM inventory_data_logs";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $inventoryData[] = array(
-                'time' => $row['time'],
-                'employeeId' => $row['employee_id'],
-                'employeeName' => $row['employee_name'],
-                'task' => $row['task']
-            );
-        }
-    }
+// Fetch data from DATA_LOGS_INVENTORY
+$inventoryQuery = "SELECT time, employee_id AS employeeId, employee_name AS employeeName, task FROM DATA_LOGS_INVENTORY";
+$inventoryResult = $conn->query($inventoryQuery);
+$inventoryData = [];
+while ($row = $inventoryResult->fetch_assoc()) {
+    $inventoryData[] = $row;
 }
 
-if ($conn->query("SHOW TABLES LIKE 'production_data_logs'")->num_rows > 0) {
-    $sql = "SELECT * FROM production_data_logs";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        while($row = $result->fetch_assoc()) {
-            $productionData[] = array(
-                'time' => $row['time'],
-                'employeeId' => $row['employee_id'],
-                'employeeName' => $row['employee_name'],
-                'task' => $row['task']
-            );
-        }
-    }
+// Fetch data from DATA_LOGS_PRODUCTION
+$productionQuery = "SELECT time, employee_id AS employeeId, employee_name AS employeeName, task FROM DATA_LOGS_PRODUCTION";
+$productionResult = $conn->query($productionQuery);
+$productionData = [];
+while ($row = $productionResult->fetch_assoc()) {
+    $productionData[] = $row;
 }
 
-// Close connection
-$conn->close();
-
-// Output data in JSON format
-echo json_encode(array(
-    'ales' => $salesData,
+// Combine all data
+$data = [
+    'sales' => $salesData,
     'inventory' => $inventoryData,
-    'production' => $productionData
-));
+    'production' => $productionData,
+];
+
+// Return data as JSON
+header('Content-Type: application/json');
+echo json_encode($data);
+
+$conn->close();
 ?>

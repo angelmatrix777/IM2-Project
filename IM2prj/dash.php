@@ -1,66 +1,61 @@
 <?php
-header('Content-Type: application/json');
+include 'db.php';
 
-require_once 'db.php';
-
-// Fetch statistics
-$stats = [
-    'to_be_packed' => 0,
-    'to_be_shipped' => 0,
-    'to_be_delivered' => 0,
+// Initialize response array
+$response = [
+    'stats' => [
+        'to_be_packed' => 0,
+        'to_be_shipped' => 0,
+        'delivered' => 0
+    ],
+    'summaries' => [
+        'quantity_in_hand' => 0,
+        'to_be_received' => 0,
+        'number_of_suppliers' => 0,
+        'number_of_categories' => 0
+    ],
+    'inventory' => []
 ];
 
-$result = $conn->query("SELECT COUNT(*) as count FROM ORDERS WHERE status='Pending'");
-if ($result->num_rows > 0) {
-    $stats['to_be_packed'] = $result->fetch_assoc()['count'];
-}
+// Fetch stats
+$sql = "SELECT COUNT(*) as count FROM ORDERS WHERE status='packing'";
+$result = $conn->query($sql);
+$response['stats']['to_be_packed'] = $result->fetch_assoc()['count'];
 
-$result = $conn->query("SELECT COUNT(*) as count FROM ORDERS WHERE status='Shipped'");
-if ($result->num_rows > 0) {
-    $stats['to_be_shipped'] = $result->fetch_assoc()['count'];
-}
+$sql = "SELECT COUNT(*) as count FROM ORDERS WHERE status='shipping'";
+$result = $conn->query($sql);
+$response['stats']['to_be_shipped'] = $result->fetch_assoc()['count'];
 
-$result = $conn->query("SELECT COUNT(*) as count FROM ORDERS WHERE status='Delivered'");
-if ($result->num_rows > 0) {
-    $stats['to_be_delivered'] = $result->fetch_assoc()['count'];
-}
+$sql = "SELECT COUNT(*) as count FROM ORDERS WHERE status='completed'";
+$result = $conn->query($sql);
+$response['stats']['delivered'] = $result->fetch_assoc()['count'];
 
 // Fetch summaries
-$summaries = [
-    'quantity_in_hand' => 0,
-    'to_be_received' => 0,
-    'number_of_suppliers' => 0,
-    'number_of_categories' => 0,
-];
+$sql = "SELECT COUNT(DISTINCT product_code) as count FROM INVENTORY";
+$result = $conn->query($sql);
+$response['summaries']['quantity_in_hand'] = $result->fetch_assoc()['count'];
 
-$result = $conn->query("SELECT SUM(quantity) as quantity FROM INVENTORY");
-if ($result->num_rows > 0) {
-    $summaries['quantity_in_hand'] = $result->fetch_assoc()['quantity'];
-}
+$sql = "SELECT COUNT(*) as count FROM ORDERS WHERE status != 'completed'";
+$result = $conn->query($sql);
+$response['summaries']['to_be_received'] = $result->fetch_assoc()['count'];
 
-$result = $conn->query("SELECT COUNT(DISTINCT supplier) as suppliers FROM INVENTORY");
-if ($result->num_rows > 0) {
-    $summaries['number_of_suppliers'] = $result->fetch_assoc()['suppliers'];
-}
+$sql = "SELECT COUNT(DISTINCT supplier_id) as count FROM SUPPLIERS";
+$result = $conn->query($sql);
+$response['summaries']['number_of_suppliers'] = $result->fetch_assoc()['count'];
 
-$result = $conn->query("SELECT COUNT(DISTINCT category) as categories FROM INVENTORY");
-if ($result->num_rows > 0) {
-    $summaries['number_of_categories'] = $result->fetch_assoc()['categories'];
-}
+$sql = "SELECT COUNT(DISTINCT wood_type) as count FROM INVENTORY";
+$result = $conn->query($sql);
+$response['summaries']['number_of_categories'] = $result->fetch_assoc()['count'];
 
-// Fetch data for low stock
-$low_stock = [];
-$result = $conn->query("SELECT * FROM LOW_STOCK");
+// Fetch inventory data
+$sql = "SELECT * FROM INVENTORY";
+$result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
-    $low_stock[] = $row;
+    $response['inventory'][] = $row;
 }
 
-$response = [
-    'stats' => $stats,
-    'summaries' => $summaries,
-    'low_stock' => $low_stock
-];
-
+// Return response as JSON
+header('Content-Type: application/json');
 echo json_encode($response);
 
 $conn->close();

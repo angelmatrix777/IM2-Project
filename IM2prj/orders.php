@@ -1,31 +1,24 @@
 <?php
-require_once 'db.php';
+// Include the database connection file
+include 'db.php';
 
-// Retrieve orders from the database
-$stmt = $conn->prepare("SELECT * FROM orders");
-$stmt->execute();
-$result = $stmt->get_result();
+// Fetch orders data
+$sql = "SELECT order_id, customer_id, employee_id, order_date_created, order_date_completed, delivery_address, total_cost, date_paid, status FROM ORDERS";
+$result = $conn->query($sql);
+
+$orders = array();
 
 if ($result->num_rows > 0) {
-    $orders = array();
-    while ($row = $result->fetch_assoc()) {
-        $orders[] = array(
-            'orderId' => $row['orders_id'],
-            'customerId' => $row['customer_id'],
-            'employeeId' => $row['employee_id'],
-            'orderDateCreated' => $row['order_date_created'],
-            'orderDateCompleted' => $row['order_date_completed'],
-            'deliveryAddress' => $row['delivery_address'],
-            'totalCost' => $row['total_cost'],
-            'datePaid' => $row['date_paid'],
-            'status' => $row['status']
-        );
+    // Output data of each row
+    while($row = $result->fetch_assoc()) {
+        $orders[] = $row;
     }
-    header('Content-Type: application/json');
-    echo json_encode($orders);
 } else {
-    echo "No orders found";
+    $orders = [];
 }
-
 $conn->close();
+
+// Return JSON response
+header('Content-Type: application/json');
+echo json_encode($orders);
 ?>

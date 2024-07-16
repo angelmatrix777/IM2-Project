@@ -1,176 +1,161 @@
-document.getElementById('employeeseditRecordBtn').addEventListener('click', function () {
-    document.getElementById('employeeseditRecordModal').style.display = 'block';
-});
+document.addEventListener('DOMContentLoaded', function () {
+    fetchEmployees();
 
-document.getElementById('employeesaddRecordBtn').addEventListener('click', function () {
-    document.getElementById('employeesaddRecordModal').style.display = 'block';
-});
+    document.getElementById('employeeseditRecordBtn').addEventListener('click', function () {
+        document.getElementById('employeeseditRecordModal').style.display = 'block';
+    });
 
-document.getElementById('employeesdeleteRecordBtn').addEventListener('click', function () {
-    document.getElementById('employeesdeleteRecordModal').style.display = 'block';
-});
+    document.getElementById('employeesaddRecordBtn').addEventListener('click', function () {
+        document.getElementById('employeesaddRecordModal').style.display = 'block';
+    });
 
-document.querySelectorAll('.employeesclose').forEach(function (closeBtn) {
-    closeBtn.addEventListener('click', function () {
-        this.parentElement.parentElement.style.display = 'none';
+    document.getElementById('employeesdeleteRecordBtn').addEventListener('click', function () {
+        document.getElementById('employeesdeleteRecordModal').style.display = 'block';
+    });
+
+    document.querySelectorAll('.employeesclose').forEach(function (el) {
+        el.addEventListener('click', function () {
+            document.getElementById('employeeseditRecordModal').style.display = 'none';
+            document.getElementById('employeesaddRecordModal').style.display = 'none';
+            document.getElementById('employeesdeleteRecordModal').style.display = 'none';
+        });
     });
 });
 
-function employeescloseModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+
+
+function fetchEmployees() {
+    fetch('employees.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            'action': 'fetch'
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        let tableBody = document.getElementById('employeesrecordTableBody');
+        tableBody.innerHTML = '';
+        data.forEach(employee => {
+            let row = `<tr>
+                <td>${employee.id}</td>
+                <td>${employee.last_name}</td>
+                <td>${employee.first_name}</td>
+                <td>${employee.contact_number}</td>
+                <td>${employee.email}</td>
+                <td>${employee.department}</td>
+                <td>${employee.permission}</td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    })
+    .catch(error => console.error('Error:', error));
 }
 
+function displayEmployees(employees) {
+    const tbody = document.querySelector('#employeesTable tbody');
+    tbody.innerHTML = '';
 
-function employeessearchRecord() {
-    const searchInput = document.getElementById('employeessearchInput').value.toLowerCase();
-    const tableBody = document.getElementById('employeesrecordTableBody');
-    const rows = tableBody.getElementsByTagName('tr');
-    const searchResultsDiv = document.querySelector('.employeessearch-results');
-    let searchResultsHTML = '';
-
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        const id = cells[0].textContent.toLowerCase();
-        const lastName = cells[1].textContent.toLowerCase();
-        const firstName = cells[2].textContent.toLowerCase();
-
-        if (id.includes(searchInput) || lastName.includes(searchInput) || firstName.includes(searchInput)) {
-            const email = cells[4].textContent;
-            const contactNumber = cells[3].textContent;
-            const department = cells[5].textContent;
-            const permission = cells[6].textContent; 
-
-          
-            const fullName = capitalize(firstName) + ' ' + capitalize(lastName);
-
-            searchResultsHTML += 
-            `<div class="employeesearch-result-item">
-                <div class="employeecolumn-name" style="text-align: center;">
-                    <br><br><br>
-                    <p><strong>Employee ID</strong><br> ${id}</p>
-                </div>
-                <div class="employeecolumn email"><br><br><br>
-                    <p><strong>Email</strong><br>  ${email}</p>
-                </div>
-                <div class="employeecolumn contact">
-                     <p style="font-size: 20px;"><strong>${fullName}</strong></p>
-                    <p><strong>Contact Number</strong><br>  ${contactNumber}</p>
-                </div>
-                <div class="employeecolumn department"><br><br><br>
-                    <p><strong>Department</strong><br>  ${department}</p>
-                </div>
-                <div class="employeecolumn permission"><br><br><br>
-                    <p><strong>Permission</strong><br>  ${permission}</p>
-                </div>
-            </div>`;
-        }
-    }
-
-    searchResultsDiv.innerHTML = searchResultsHTML !== '' ? searchResultsHTML : '<p style="font-size: 30px; text-align: center;">No Results Found</p>';
-}
-function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
+    employees.forEach(function (employee) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${employee.id}</td>
+            <td>${employee.first_name}</td>
+            <td>${employee.last_name}</td>
+            <td>${employee.contact_number}</td>
+            <td>${employee.email}</td>
+            <td>${employee.department}</td>
+            <td>${employee.permission}</td>
+            <td>
+                <button onclick="editEmployee(${employee.id})">Edit</button>
+                <button onclick="deleteEmployee(${employee.id})">Delete</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-//new added
-function employeesSortRecord() {
-    const sortBy = document.getElementById('employeesortBy').value;
-    const tableBody = document.getElementById('employeesrecordTableBody');
-    const rows = Array.from(tableBody.getElementsByTagName('tr'));
-
-    let compareFunction;
-
-    switch (sortBy) {
-        case 'name':
-            compareFunction = (a, b) => {
-                const nameA = a.cells[2].textContent.toLowerCase() + ' ' + a.cells[1].textContent.toLowerCase();
-                const nameB = b.cells[2].textContent.toLowerCase() + ' ' + b.cells[1].textContent.toLowerCase();
-                return nameA.localeCompare(nameB);
-            };
-            break;
-        case 'permission':
-            compareFunction = (a, b) => a.cells[6].textContent.localeCompare(b.cells[6].textContent);
-            break;
-        case 'department':
-            compareFunction = (a, b) => a.cells[5].textContent.localeCompare(b.cells[5].textContent);
-            break;
-        default:
-            return;
-    }
-
-    rows.sort(compareFunction);
-
-    while (tableBody.firstChild) {
-        tableBody.removeChild(tableBody.firstChild);
-    }
-
-    rows.forEach(row => tableBody.appendChild(row));
+function editEmployee(id) {
+    const employee = document.getElementById(`employee-${id}`);
+    document.getElementById('employeeseditEmployeeId').value = id;
+    document.getElementById('employeeseditFirstName').value = employee.querySelector('.first_name').textContent;
+    document.getElementById('employeeseditLastName').value = employee.querySelector('.last_name').textContent;
+    document.getElementById('employeeseditContactNumber').value = employee.querySelector('.contact_number').textContent;
+    document.getElementById('employeeseditEmail').value = employee.querySelector('.email').textContent;
+    document.getElementById('employeeseditDepartment').value = employee.querySelector('.department').textContent;
+    document.getElementById('employeeseditPermission').value = employee.querySelector('.permission').textContent;
+    document.getElementById('employeeseditRecordModal').style.display = 'block';
 }
-//new added
+
+function deleteEmployee(id) {
+    document.getElementById('employeesdeleteEmployeeId').value = id;
+    document.getElementById('employeesdeleteRecordModal').style.display = 'block';
+}
+
 function employeessaveEdit() {
-    const employeeId = document.getElementById('employeeseditEmployeeId').value;
+    const id = document.getElementById('employeeseditEmployeeId').value;
     const firstName = document.getElementById('employeeseditFirstName').value;
     const lastName = document.getElementById('employeeseditLastName').value;
     const contactNumber = document.getElementById('employeeseditContactNumber').value;
     const email = document.getElementById('employeeseditEmail').value;
     const department = document.getElementById('employeeseditDepartment').value;
-    const permission = document.getElementById('employeeseditPermission').value; // Capture permission
+    const permission = document.getElementById('employeeseditPermission').value;
 
-    const tableBody = document.getElementById('employeesrecordTableBody');
-    const rows = tableBody.getElementsByTagName('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells[0].textContent == employeeId) {
-            cells[1].textContent = lastName;
-            cells[2].textContent = firstName;
-            cells[3].textContent = contactNumber;
-            cells[4].textContent = email;
-            cells[5].textContent = department;
-            cells[6].textContent = permission; 
-            break;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'employees.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert('Record updated successfully');
+            fetchEmployees();
+            document.getElementById('employeeseditRecordModal').style.display = 'none';
+        } else {
+            alert('Error updating record');
         }
-    }
-
-    employeescloseModal('employeeseditRecordModal');
+    };
+    xhr.send(`action=edit&id=${id}&first_name=${firstName}&last_name=${lastName}&contact_number=${contactNumber}&email=${email}&department=${department}&permission=${permission}`);
 }
 
 function employeessaveAdd() {
-    const employeeId = document.getElementById('employeesaddEmployeeId').value;
+    const id = document.getElementById('employeesaddEmployeeId').value;
     const firstName = document.getElementById('employeesaddFirstName').value;
     const lastName = document.getElementById('employeesaddLastName').value;
     const contactNumber = document.getElementById('employeesaddContactNumber').value;
     const email = document.getElementById('employeesaddEmail').value;
     const department = document.getElementById('employeesaddDepartment').value;
-    const permission = document.getElementById('employeesaddPermission').value; 
+    const permission = document.getElementById('employeesaddPermission').value;
 
-    const tableBody = document.getElementById('employeesrecordTableBody');
-
-    const newRow = tableBody.insertRow();
-    newRow.innerHTML = `
-        <td>${employeeId}</td>
-        <td>${lastName}</td>
-        <td>${firstName}</td>
-        <td>${contactNumber}</td>
-        <td>${email}</td>
-        <td>${department}</td>
-        <td>${permission}</td>`;
-
-    employeescloseModal('employeesaddRecordModal');
-}
-function employeesconfirmDelete() {
-    const employeeId = document.getElementById('employeesdeleteEmployeeId').value;
-
-    const tableBody = document.getElementById('employeesrecordTableBody');
-    const rows = tableBody.getElementsByTagName('tr');
-
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells[0].textContent == employeeId) {
-            tableBody.deleteRow(i);
-            break;
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'employees.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert('Record added successfully');
+            fetchEmployees();
+            document.getElementById('employeesaddRecordModal').style.display = 'none';
+        } else {
+            alert('Error adding record');
         }
-    }
+    };
+    xhr.send(`action=add&id=${id}&first_name=${firstName}&last_name=${lastName}&contact_number=${contactNumber}&email=${email}&department=${department}&permission=${permission}`);
+}
 
-    employeescloseModal('employeesdeleteRecordModal');
+function employeesconfirmDelete() {
+    const id = document.getElementById('employeesdeleteEmployeeId').value;
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'employees.php', true);
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            alert('Record deleted successfully');
+            fetchEmployees();
+            document.getElementById('employeesdeleteRecordModal').style.display = 'none';
+        } else {
+            alert('Error deleting record');
+        }
+    };
+    xhr.send(`action=delete&id=${id}`);
 }

@@ -30,27 +30,21 @@ function customerssearchRecord() {
     for (let i = 0; i < rows.length; i++) {
         const cells = rows[i].getElementsByTagName('td');
         const id = cells[0].textContent.toLowerCase();
-        const lastName = cells[1].textContent.toLowerCase();
-        const firstName = cells[2].textContent.toLowerCase();
+        const name = cells[1].textContent.toLowerCase();
 
-        if (id.includes(searchInput) || lastName.includes(searchInput) || firstName.includes(searchInput)) {
+        if (id.includes(searchInput) || name.includes(searchInput)) {
             searchResultsHTML = `
                 <div class="customersearch-result-item">
                     <div class="customercolumn-name">
-                    <p style="font-size:30px; margin-bottom:0px"><strong> ${capitalize(firstName)} ${capitalize(lastName)}</strong></p>
-                        <p><strong>Contact Number:</strong><br> ${cells[3].textContent}</p>
+                    <p style="font-size:30px; margin-bottom:0px"><strong> ${capitalize(name)}</strong></p>
+                        <p><strong>Contact Number:</strong><br> ${cells[2].textContent}</p>
                     </div>
                     <div class="customercolumn details">
                         <p><strong>Customer ID:</strong><br> ${id}</p>
-                        <p><strong>Email:</strong><br> ${cells[4].textContent}</p>
-                    </div>
-                    <div class="customercolumn orders">
-                        <p><strong>All Orders:</strong><br> ${cells[5].textContent}</p>
-                        <p><strong>Pending:</strong><br> 2</p> <!-- Example rani piste -->
+                        <p><strong>Email:</strong><br> ${cells[3].textContent}</p>
                     </div>
                     <div class="customercolumn status">
-                        <p><strong>Completed:</strong><br> 8</p> <!-- Example rani piste -->
-                        <p><strong>Cancelled:</strong><br> 0</p> <!-- Example rani piste -->
+                        <p><strong>Credibility:</strong><br> ${cells[4].textContent}</p>
                     </div>
                 </div>
                 <hr class="divider">`; 
@@ -67,116 +61,53 @@ function capitalize(string) {
 
 function customerssaveEdit() {
     const customerId = document.getElementById('customerseditCustomerId').value;
-    const firstName = document.getElementById('customerseditFirstName').value;
-    const lastName = document.getElementById('customerseditLastName').value;
+    const name = document.getElementById('customerseditName').value;
     const contactNumber = document.getElementById('customerseditContactNumber').value;
     const email = document.getElementById('customerseditEmail').value;
-    const orders = document.getElementById('customerseditOrders').value;
+    const credibility = document.getElementById('customerseditCredibility').value;
 
-    const tableBody = document.getElementById('customersrecordTableBody');
-    const rows = tableBody.getElementsByTagName('tr');
+    const data = new FormData();
+    data.append('action', 'edit');
+    data.append('customer_id', customerId);
+    data.append('name', name);
+    data.append('contact_number', contactNumber);
+    data.append('email', email);
+    data.append('credibility_status', credibility);
 
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells[0].textContent == customerId) {
-            cells[1].textContent = lastName;
-            cells[2].textContent = firstName;
-            cells[3].textContent = contactNumber;
-            cells[4].textContent = email;
-            cells[5].textContent = orders;
-            break;
-        }
-    }
+    fetch('customers.php', {
+        method: 'POST',
+        body: data
+    }).then(response => response.text())
+      .then(result => {
+          console.log(result);
+          loadCustomers();
+      });
 
     customerscloseModal('customerseditRecordModal');
 }
-//new added//
-
-function sortTable(columnIndex, asc) {
-const tableBody = document.getElementById('customersrecordTableBody');
-const rows = Array.from(tableBody.rows);
-
-rows.sort((rowA, rowB) => {
-    const cellA = rowA.cells[columnIndex].textContent.trim();
-    const cellB = rowB.cells[columnIndex].textContent.trim();
-
-    if (columnIndex === 1 || columnIndex === 2) { 
-        return asc ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-    } else { 
-        return asc ? parseInt(cellA) - parseInt(cellB) : parseInt(cellB) - parseInt(cellA);
-    }
-});
-
-
-while (tableBody.firstChild) {
-    tableBody.removeChild(tableBody.firstChild);
-}
-
-
-rows.forEach(row => tableBody.appendChild(row));
-}
-
-
-function customersSortRecords() {
-const sortSelect = document.getElementById('sortSelect');
-const selectedOption = sortSelect.options[sortSelect.selectedIndex].value;
-
-switch (selectedOption) {
-    case 'lastNameAsc':
-        sortTable(1, true); 
-        break;
-    case 'lastNameDesc':
-        sortTable(1, false); 
-        break;
-    case 'ordersAsc':
-        sortTable(5, true); 
-        break;
-    case 'ordersDesc':
-        sortTable(5, false); 
-        break;
-    default:
-        break;
-}
-}
-
-
-document.addEventListener('DOMContentLoaded', function () {
-const tableBody = document.getElementById('customersrecordTableBody');
-
-
-initialRecords.forEach(record => {
-    const newRow = tableBody.insertRow();
-    newRow.innerHTML = `
-        <td>${record.id}</td>
-        <td>${record.lastName}</td>
-        <td>${record.firstName}</td>
-        <td>${record.contactNumber}</td>
-        <td>${record.email}</td>
-        <td>${record.orders}</td>`;
-});
-
-
-sortTable(1, true);
-});
 
 function customerssaveAdd() {
     const customerId = document.getElementById('customersaddCustomerId').value;
-    const firstName = document.getElementById('customersaddFirstName').value;
-    const lastName = document.getElementById('customersaddLastName').value;
+    const name = document.getElementById('customersaddName').value;
     const contactNumber = document.getElementById('customersaddContactNumber').value;
     const email = document.getElementById('customersaddEmail').value;
-    const orders = document.getElementById('customersaddOrders').value;
+    const credibility = document.getElementById('customersaddCredibility').value;
 
-    const tableBody = document.getElementById('customersrecordTableBody');
+    const data = new FormData();
+    data.append('action', 'add');
+    data.append('name', name);
+    data.append('contact_number', contactNumber);
+    data.append('email', email);
+    data.append('credibility_status', credibility);
 
-    const newRow = tableBody.insertRow();
-    newRow.innerHTML = `
-        <td>${customerId}</td>
-        <td>${lastName}</td>
-        <td>${firstName}</td>
-        <td>${contactNumber}</td>
-        <td>${email}</td>
-        <td>${orders}</td>`;
+    fetch('customers.php', {
+        method: 'POST',
+        body: data
+    }).then(response => response.text())
+      .then(result => {
+          console.log(result);
+          loadCustomers();
+      });
 
     customerscloseModal('customersaddRecordModal');
 }
@@ -184,34 +115,42 @@ function customerssaveAdd() {
 function customersconfirmDelete() {
     const customerId = document.getElementById('customersdeleteCustomerId').value;
 
-    const tableBody = document.getElementById('customersrecordTableBody');
-    const rows = tableBody.getElementsByTagName('tr');
+    const data = new FormData();
+    data.append('action', 'delete');
+    data.append('customer_id', customerId);
 
-    for (let i = 0; i < rows.length; i++) {
-        const cells = rows[i].getElementsByTagName('td');
-        if (cells[0].textContent == customerId) {
-            tableBody.deleteRow(i);
-            break;
-        }
-    }
+    fetch('customers.php', {
+        method: 'POST',
+        body: data
+    }).then(response => response.text())
+      .then(result => {
+          console.log(result);
+          loadCustomers();
+      });
 
     customerscloseModal('customersdeleteRecordModal');
 }
 
+function loadCustomers() {
+    fetch('customers.php', {
+        method: 'POST',
+        body: new URLSearchParams('action=read')
+    })
+    .then(response => response.json())
+    .then(customers => {
+        const tableBody = document.getElementById('customersrecordTableBody');
+        tableBody.innerHTML = '';
 
-document.addEventListener('DOMContentLoaded', function () {
-    
-
-    const tableBody = document.getElementById('customersrecordTableBody');
-
-    initialRecords.forEach(record => {
-        const newRow = tableBody.insertRow();
-        newRow.innerHTML = `
-            <td>${record.id}</td>
-            <td>${record.lastName}</td>
-            <td>${record.firstName}</td>
-            <td>${record.contactNumber}</td>
-            <td>${record.email}</td>
-            <td>${record.orders}</td>`;
+        customers.forEach(customer => {
+            const newRow = tableBody.insertRow();
+            newRow.innerHTML = `
+                <td>${customer.id}</td>
+                <td>${customer.name}</td>
+                <td>${customer.contact_number}</td>
+                <td>${customer.email}</td>
+                <td>${customer.credibility_status}</td>`;
+        });
     });
-});
+}
+
+document.addEventListener('DOMContentLoaded', loadCustomers);

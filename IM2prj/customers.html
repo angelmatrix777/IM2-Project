@@ -43,31 +43,27 @@
                 <p style="font-size: 30px; text-align: center;">No Searches</p>
             </div>
             <div class="customersrecord-list">
-                <!-- new added -->
                 <div class="customers-sort-options">
                     <img src="logos/sort.svg">
                     <select id="sortSelect" onchange="customersSortRecords()">
-                        <option value="lastNameAsc">Last Name (A-Z)</option>
-                        <option value="lastNameDesc">Last Name (Z-A)</option>
-                        <option value="ordersAsc">Orders (Ascending)</option>
-                        <option value="ordersDesc">Orders (Descending)</option>
+                        <option value="nameAsc">Name (A-Z)</option>
+                        <option value="nameDesc">Name (Z-A)</option>
+                        <option value="credibilityAsc">Credibility (Ascending)</option>
+                        <option value="credibilityDesc">Credibility (Descending)</option>
                     </select>
                 </div>
-                     <!-- new added -->
                 <h2 style="text-align: center;">Customer Record</h2>
                 <table>
                     <thead>
                         <tr><strong>
                             <th>ID</th>
-                            <th>Last Name</th>
-                            <th>First Name</th>
+                            <th>Name</th>
                             <th>Contact Number</th>
                             <th>Email</th>
-                            <th>Orders</th>
+                            <th>Credibility</th>
                         </strong></tr>
                     </thead>
                     <tbody id="customersrecordTableBody">
-                        <!--paras record -->
                     </tbody>
                 </table>
             </div>
@@ -80,16 +76,17 @@
             <form id="customerseditForm"><strong>
                 <label for="customerseditCustomerId">Customer ID</label><br>
                 <input type="number" id="customerseditCustomerId" name="customer_id"><br>
-                <label for="customerseditFirstName">First Name</label><br>
-                <input type="text" id="customerseditFirstName" name="first_name"><br>
-                <label for="customerseditLastName">Last Name</label><br>
-                <input type="text" id="customerseditLastName" name="last_name"><br>
+                <label for="customerseditName">Name</label><br>
+                <input type="text" id="customerseditName" name="name"><br>
                 <label for="customerseditContactNumber">Contact Number</label><br>
                 <input type="text" id="customerseditContactNumber" name="contact_number"><br>
                 <label for="customerseditEmail">Email</label><br>
                 <input type="email" id="customerseditEmail" name="email"><br>
-                <label for="customerseditOrders">Orders</label><br>
-                <input type="number" id="customerseditOrders" name="orders"><br>
+                <label for="customerseditCredibility">Credibility</label><br>
+                <select id="customerseditCredibility" name="credibility_status">
+                    <option value="Trusted">Trusted</option>
+                    <option value="Not Trusted">Not Trusted</option>
+                </select><br>
                 <button type="button" class="customerssave-btn" onclick="customerssaveEdit()">Save</button>
             </strong></form>
         </div>
@@ -101,16 +98,17 @@
             <form id="customersaddForm"><strong>
                 <label for="customersaddCustomerId">Customer ID</label><br>
                 <input type="number" id="customersaddCustomerId" name="customer_id"><br>
-                <label for="customersaddFirstName">First Name</label><br>
-                <input type="text" id="customersaddFirstName" name="first_name"><br>
-                <label for="customersaddLastName">Last Name</label><br>
-                <input type="text" id="customersaddLastName" name="last_name"><br>
+                <label for="customersaddName">Name</label><br>
+                <input type="text" id="customersaddName" name="name"><br>
                 <label for="customersaddContactNumber">Contact Number</label><br>
                 <input type="text" id="customersaddContactNumber" name="contact_number"><br>
                 <label for="customersaddEmail">Email</label><br>
                 <input type="email" id="customersaddEmail" name="email"><br>
-                <label for="customersaddOrders">Orders</label><br>
-                <input type="number" id="customersaddOrders" name="orders"><br>
+                <label for="customersaddCredibility">Credibility</label><br>
+                <select id="customersaddCredibility" name="credibility_status">
+                    <option value="Trusted">Trusted</option>
+                    <option value="Not Trusted">Not Trusted</option>
+                </select><br>
                 <button type="button" class="customerssave-btn" onclick="customerssaveAdd()">Save</button>
             </strong></form>
         </div>

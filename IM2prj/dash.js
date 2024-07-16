@@ -13,16 +13,16 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         document.getElementById('to-be-packed-count').innerHTML = data.stats.to_be_packed;
         document.getElementById('to-be-shipped-count').innerHTML = data.stats.to_be_shipped;
-        document.getElementById('to-be-delivered-count').innerHTML = data.stats.to_be_delivered;
+        document.getElementById('to-be-delivered-count').innerHTML = data.stats.delivered;
 
         document.getElementById('quantity-in-hand-count').innerHTML = data.summaries.quantity_in_hand;
         document.getElementById('to-be-received-count').innerHTML = data.summaries.to_be_received;
         document.getElementById('number-of-suppliers-count').innerHTML = data.summaries.number_of_suppliers;
         document.getElementById('number-of-categories-count').innerHTML = data.summaries.number_of_categories;
 
-        const lowStockTable = document.getElementById('low-stock-tbody');
-        data.low_stock.forEach((item) => {
-            const row = lowStockTable.insertRow();
+        const inventoryTable = document.getElementById('inventoryTable');
+        data.inventory.forEach((item) => {
+            const row = inventoryTable.insertRow();
             row.insertCell(0).innerText = item.product_code;
             row.insertCell(1).innerText = item.wood_type;
             row.insertCell(2).innerText = item.size;

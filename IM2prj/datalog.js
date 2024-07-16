@@ -1,4 +1,4 @@
-fetch('data.php')
+fetch('datalog.php')
   .then(response => response.json())
   .then(data => {
     const salesData = data.sales;
