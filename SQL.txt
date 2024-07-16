@@ -1,0 +1,136 @@
+IF NOT EXISTS CREATE DATABASE lumber_company
+USE lumber_company
+
+CREATE TABLE EMPLOYEE (
+    id INT PRIMARY KEY,
+    last_name VARCHAR(50),
+    first_name VARCHAR(50),
+    contact_number VARCHAR(15),
+    email VARCHAR(100),
+    department VARCHAR(50),
+    permission VARCHAR(50)
+);
+
+
+INSERT INTO EMPLOYEE (id, last_name, first_name, contact_number, email, department, permission)
+VALUES
+(1, 'Reyes', 'Juan', '09171234567', 'juan.reyes@example.com', 'Sales', 'Admin'),
+(2, 'Santos', 'Maria', '09181234567', 'maria.santos@example.com', 'Inventory', 'User'),
+(3, 'Dela Cruz', 'Jose', '09191234567', 'jose.delacruz@example.com', 'Production', 'User');
+
+
+-- Create INVENTORY table
+CREATE TABLE INVENTORY (
+    product_code VARCHAR(10) PRIMARY KEY,
+    wood_type VARCHAR(50),
+    size VARCHAR(50),
+    unit VARCHAR(10),
+    quantity INT,
+    location VARCHAR(100),
+    price DECIMAL(10, 2)
+);
+
+
+INSERT INTO INVENTORY (product_code, wood_type, size, unit, quantity, location, price)
+VALUES
+('P001', 'Mahogany', '2x4', 'pcs', 5, 'A1', 150.00),
+('P002', 'Pine', '2x6', 'pcs', 2, 'A2', 100.00),
+('P003', 'Cedar', '4x4', 'pcs', 20, 'B1', 200.00),
+('P004', 'Oak', '6x6', 'pcs', 15, 'C1', 250.00);
+
+
+CREATE VIEW LOW_STOCK AS
+SELECT product_code, wood_type, size, unit, quantity, location, price
+FROM INVENTORY
+WHERE quantity <= 5;
+
+SELECT * FROM LOW_STOCK;
+
+
+CREATE TABLE ORDERS (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    employee_id INT,
+    order_date_created DATE,
+    order_date_completed DATE,
+    delivery_address VARCHAR(255),
+    total_cost DECIMAL(10, 2),
+    date_paid DATE,
+    status VARCHAR(50)
+);
+
+
+INSERT INTO ORDERS (order_id, customer_id, employee_id, order_date_created, order_date_completed, delivery_address, total_cost, date_paid, status)
+VALUES
+(1001, 1, 1, '2024-07-01', '2024-07-05', '123 Mango St., Cebu City', 5000.00, '2024-07-04', 'Completed'),
+(1002, 2, 2, '2024-07-03', '2024-07-07', '456 Banawa St., Cebu City', 7500.00, '2024-07-06', 'Completed'),
+(1003, 3, 3, '2024-07-05', '2024-07-10', '789 Mabolo St., Cebu City', 3000.00, '2024-07-09', 'Pending');
+
+CREATE TABLE CUSTOMERS (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    contact_number VARCHAR(15),
+    email VARCHAR(100),
+    credibility_status VARCHAR(50)
+);
+
+-- Insert sample data into CUSTOMERS table
+INSERT INTO CUSTOMERS (id, name, contact_number, email, credibility_status)
+VALUES
+(1, 'Pedro Cruz', '09201234567', 'pedro.cruz@example.com', 'Good'),
+(2, 'Ana Lopez', '09211234567', 'ana.lopez@example.com', 'Excellent'),
+(3, 'Luis Santos', '09221234567', 'luis.santos@example.com', 'Average');
+
+CREATE TABLE DATA_LOGS_SALES (
+    time TIMESTAMP,
+    employee_id INT,
+    employee_name VARCHAR(100),
+    task VARCHAR(255)
+);
+
+INSERT INTO DATA_LOGS_SALES (time, employee_id, employee_name, task)
+VALUES
+('2024-07-01 08:00:00', 1, 'Juan Reyes', 'Processed Order #1001'),
+('2024-07-03 09:30:00', 2, 'Maria Santos', 'Updated Inventory'),
+('2024-07-05 11:00:00', 3, 'Jose Dela Cruz', 'Produced Product Code 101');
+
+CREATE TABLE DATA_LOGS_INVENTORY (
+    time TIMESTAMP,
+    employee_id INT,
+    employee_name VARCHAR(100),
+    task VARCHAR(255)
+);
+
+-- Insert sample data into DATA_LOGS_INVENTORY table
+INSERT INTO DATA_LOGS_INVENTORY (time, employee_id, employee_name, task)
+VALUES
+('2024-07-02 10:00:00', 2, 'Maria Santos', 'Checked Inventory Levels'),
+('2024-07-04 14:00:00', 1, 'Juan Reyes', 'Received New Shipment'),
+('2024-07-06 16:00:00', 3, 'Jose Dela Cruz', 'Updated Inventory System');
+
+CREATE TABLE DATA_LOGS_PRODUCTION (
+    time TIMESTAMP,
+    employee_id INT,
+    employee_name VARCHAR(100),
+    task VARCHAR(255)
+);
+
+INSERT INTO DATA_LOGS_PRODUCTION (time, employee_id, employee_name, task)
+VALUES
+('2024-07-03 07:00:00', 3, 'Jose Dela Cruz', 'Started Production for Order #1002'),
+('2024-07-05 10:00:00', 1, 'Juan Reyes', 'Quality Check for Order #1001'),
+('2024-07-07 15:00:00', 2, 'Maria Santos', 'Finished Production for Order #1003');
+
+-- Step 1: Alter the CUSTOMERS table to change the credibility_status to BOOLEAN
+ALTER TABLE CUSTOMERS
+MODIFY COLUMN credibility_status BOOLEAN;
+
+-- Step 2: Update existing records to reflect binary credibility status
+UPDATE CUSTOMERS
+SET credibility_status = CASE
+    WHEN credibility_status IN ('Excellent', 'Good') THEN TRUE
+    ELSE FALSE
+END;
+
+-- Verify the changes
+SELECT * FROM CUSTOMERS;
