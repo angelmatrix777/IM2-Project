@@ -1,3 +1,23 @@
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('session_info.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedin) {
+                if (!data.isAdmin) {
+                    const adminDiv = document.querySelector('.customerstoolbar');
+                    if (adminDiv) {
+                        adminDiv.style.display = "none";
+                    }
+                }
+            } else {
+                alert("You are not logged in");
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
+
+
 document.getElementById('customerseditRecordBtn').addEventListener('click', function () {
     document.getElementById('customerseditRecordModal').style.display = 'block';
 });
@@ -47,7 +67,7 @@ function customerssearchRecord() {
                         <p><strong>Credibility:</strong><br> ${cells[4].textContent}</p>
                     </div>
                 </div>
-                <hr class="divider">`; 
+                <hr class="divider">`;
             break;
         }
     }
@@ -78,10 +98,10 @@ function customerssaveEdit() {
         method: 'POST',
         body: data
     }).then(response => response.text())
-      .then(result => {
-          console.log(result);
-          loadCustomers();
-      });
+        .then(result => {
+            console.log(result);
+            loadCustomers();
+        });
 
     customerscloseModal('customerseditRecordModal');
 }
@@ -104,10 +124,10 @@ function customerssaveAdd() {
         method: 'POST',
         body: data
     }).then(response => response.text())
-      .then(result => {
-          console.log(result);
-          loadCustomers();
-      });
+        .then(result => {
+            console.log(result);
+            loadCustomers();
+        });
 
     customerscloseModal('customersaddRecordModal');
 }
@@ -123,10 +143,10 @@ function customersconfirmDelete() {
         method: 'POST',
         body: data
     }).then(response => response.text())
-      .then(result => {
-          console.log(result);
-          loadCustomers();
-      });
+        .then(result => {
+            console.log(result);
+            loadCustomers();
+        });
 
     customerscloseModal('customersdeleteRecordModal');
 }
@@ -136,21 +156,25 @@ function loadCustomers() {
         method: 'POST',
         body: new URLSearchParams('action=read')
     })
-    .then(response => response.json())
-    .then(customers => {
-        const tableBody = document.getElementById('customersrecordTableBody');
-        tableBody.innerHTML = '';
+        .then(response => response.json())
+        .then(customers => {
+            const tableBody = document.getElementById('customersrecordTableBody');
+            tableBody.innerHTML = '';
 
-        customers.forEach(customer => {
-            const newRow = tableBody.insertRow();
-            newRow.innerHTML = `
+            customers.forEach(customer => {
+                const newRow = tableBody.insertRow();
+                newRow.innerHTML = `
                 <td>${customer.id}</td>
                 <td>${customer.name}</td>
                 <td>${customer.contact_number}</td>
                 <td>${customer.email}</td>
                 <td>${customer.credibility_status}</td>`;
+            });
         });
-    });
 }
 
 document.addEventListener('DOMContentLoaded', loadCustomers);
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
+});

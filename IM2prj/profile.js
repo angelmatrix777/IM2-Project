@@ -1,12 +1,38 @@
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('get_employee_data.php')
+    .then(response => response.json())
+    .then(data => {
+      if (data.loggedin) {
+        if (!data.isAdmin) {
+          const adminDiv = document.querySelector('.buttons');
+          if (adminDiv) {
+            adminDiv.style.display = "none";
+          }
+        }
+
+        // Populate profile data
+        if (data.employeeData) {
+          document.getElementById('profile-id').textContent = data.employeeData.id;
+          document.getElementById('profile-role').textContent = data.employeeData.permission;
+          document.getElementById('profile-name').value = data.employeeData.first_name + ' ' + data.employeeData.last_name;
+          document.getElementById('profile-contact').value = data.employeeData.contact_number;
+          document.getElementById('profile-email').value = data.employeeData.email;
+        }
+      } else {
+        alert("You are not logged in");
+        window.location.href = 'index.html'; // Redirect to login page if not logged in
+      }
+    })
+    .catch(error => console.error('Error fetching session info:', error));
+});
+
 const profilePictureUpload = document.getElementById('profile-picture-upload');
 const profilePicture = document.getElementById('profile-picture');
 const uploadLabel = document.getElementById('upload-label');
 const editPictureButton = document.getElementById('edit-picture');
 const savePictureButton = document.getElementById('save-picture');
-const profileInfo = document.getElementById('profile-info');
 const editInfoButton = document.getElementById('edit-info');
 const saveInfoButton = document.getElementById('save-info');
-const addressInput = document.getElementById('profile-address');
 const contactInput = document.getElementById('profile-contact');
 const emailInput = document.getElementById('profile-email');
 
@@ -32,18 +58,48 @@ savePictureButton.addEventListener('click', () => {
   savePictureButton.style.display = 'none';
 });
 
-editInfoButton.addEventListener('click', () => {
-  addressInput.readOnly = false;
-  contactInput.readOnly = false;
-  emailInput.readOnly = false;
-  editInfoButton.style.display = 'none';
-  saveInfoButton.style.display = 'inline-block';
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('get_employee_profile.php')
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              const employee = data.employee;
+              document.getElementById('employeeName').textContent = `${capitalize(employee.first_name)} ${capitalize(employee.last_name)}`;
+              document.getElementById('employeeRole').textContent = employee.department;
+              document.getElementById('employeeContactNumber').textContent = employee.contact_number;
+              document.getElementById('employeeEmail').textContent = employee.email;
+          } else {
+              console.error('Failed to fetch employee data');
+          }
+      })
+      .catch(error => console.error('Error:', error));
 });
 
-saveInfoButton.addEventListener('click', () => {
-  addressInput.readOnly = true;
-  contactInput.readOnly = true;
-  emailInput.readOnly = true;
-  editInfoButton.style.display = 'inline-block';
-  saveInfoButton.style.display = 'none';
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('get_employee_profile.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const employee = data.employee;
+                document.getElementById('employeeName').textContent = `${capitalize(employee.first_name)} ${capitalize(employee.last_name)}`;
+                document.getElementById('employeeRole').textContent = employee.department;
+                document.getElementById('employeeContactNumber').textContent = employee.contact_number;
+                document.getElementById('employeeEmail').textContent = employee.email;
+            } else {
+                console.error('Failed to fetch employee data');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+  window.location.href = 'index.html';
 });

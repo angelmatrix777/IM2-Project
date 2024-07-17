@@ -8,7 +8,7 @@ body {
 }
 
 .header {
-    background-color: #5a67d8;
+    background-color: #6f1a07;
     color: white;
     align-items: center;
     display: flex;
@@ -197,7 +197,7 @@ div.customerstoolbar{
 .customerssearchbar button, .customerstoolbar button {
     padding: 10px;
     border: none;
-    background-color: #5a67d8;
+    background-color: #8f8073;
     color: white;
     cursor: pointer;
     border-radius: 5px;
@@ -246,7 +246,7 @@ div.customerstoolbar{
 }
 
 .search button:hover, .customerstoolbar button:hover {
-    background-color: #7F00FF;
+    background-color: #7a6d60;
 }
 
 .customersrecord-list table {
@@ -315,7 +315,7 @@ div.customerstoolbar{
 
 .customersmodal-content .customerssave-btn {
     padding: 10px 20px;
-    background-color: #5a67d8;
+    background-color: #194630;
     color: white;
     border: none;
     border-radius: 5px;
@@ -327,7 +327,7 @@ div.customerstoolbar{
 }
 
 .customersmodal-content .customerssave-btn:hover {
-    background-color: #7F00FF; 
+    background-color: #2d634a; 
 }
 
 .customers-sort-options select {
@@ -375,7 +375,7 @@ div.employeestoolbar{
 .employeessearchbar button, .employeestoolbar button {
     padding: 10px;
     border: none;
-    background-color: #5a67d8;
+    background-color: #8f8073;
     color: white;
     cursor: pointer;
     border-radius: 5px;
@@ -409,7 +409,7 @@ div.employeestoolbar{
 
 
 .search button:hover, .employeestoolbar button:hover {
-    background-color: #7F00FF;
+    background-color: #7a6d60;
 }
 
 .employeesrecord-list table {
@@ -486,7 +486,7 @@ div.employeestoolbar{
 
 .employeesmodal-content .employeessave-btn {
     padding: 10px 20px;
-    background-color: #5a67d8;
+    background-color: #194630;
     color: white;
     border: none;
     border-radius: 5px;
@@ -498,7 +498,7 @@ div.employeestoolbar{
 }
 
 .employeesmodal-content .employeessave-btn:hover {
-    background-color: #7F00FF; 
+    background-color: #2d634a; 
 }
 
 /* new added */
@@ -590,7 +590,7 @@ div.employeestoolbar{
   .upload-options label {
     cursor: pointer;
     margin-bottom: 10px;
-    background-color: #7F00FF;
+    background-color: #8f8073;
     border: none;
     padding: 10px;
     border-radius: 5px;
@@ -599,14 +599,14 @@ div.employeestoolbar{
   .upload-options button {
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: #7F00FF;
+    background-color: #8f8073;
     color: #fff;
     border: none;
     padding: 10px;
     border-radius: 5px;
   }
   .upload-options button#save-picture {
-    background-color: #7F00FF; /* violet */
+    background-color: #8f8073; 
     color: #fff;
     border: none;
 
@@ -622,7 +622,7 @@ div.employeestoolbar{
   }
   
   .upload-options button#edit-picture {
-    background-color: #FF0000; /* red */
+    background-color: #FF0000;
     color: #fff;
     border: none;
 
@@ -656,15 +656,74 @@ div.employeestoolbar{
   }
   
   #edit-info {
-    background-color: #FF0000; /* red */
+    background-color: #FF0000; 
     color: #fff;
     border: none;
     text-align: center;
   }
   
   #save-info {
-    background-color: #7F00FF;
+    background-color: #194630;
     color: #fff;
     text-align: center;
     border: none;
   }
+
+  @media (max-width: 768px) {
+    .header {
+        position: relative;
+        height: auto;
+        padding: 20px;
+        justify-content: flex-start;
+    }
+
+    .nav-logo {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-top: 0;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-top: 5%;
+    }
+
+    .customersmain-content,
+    .employeesmain-content {
+        margin-left: 0;
+        padding-right: 0;
+    }
+
+    .customerssearch-results,
+    .employeessearch-results {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .customersearch-result-item,
+    .employeesearch-result-item {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .customersrecord-list table,
+    .employeesrecord-list table {
+        width: 100%;
+    }
+
+    .customersrecord-list th,
+    .customersrecord-list td,
+    .employeesrecord-list th,
+    .employeesrecord-list td {
+        width: auto;
+    }
+}

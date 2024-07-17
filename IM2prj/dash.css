@@ -8,7 +8,7 @@ body {
 }
 
 .header {
-    background-color: #5a67d8;
+    background-color: #6f1a07;
     color: white;
     align-items: center;
     display: flex;
@@ -143,4 +143,62 @@ body {
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .header {
+        position: relative;
+        height: auto;
+        padding: 20px;
+        justify-content: flex-start;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-top: 0;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-top: 5%;
+    }
+
+    .stats {
+        flex-direction: column;
+    }
+
+    .stat {
+        margin-bottom: 20px;
+    }
+
+    .summary {
+        flex-direction: column;
+    }
+
+    .summary-box {
+        margin-bottom: 20px;
+    }
+
+    .low-stock, .inventory {
+        margin: 20px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat {
+        padding: 10px;
+    }
+
+    .stat h3 {
+        font-size: 1.5em;
+    }
+
+    .summary-box {
+        padding: 10px;
+    }
+
+    .low-stock table, .inventory table {
+        font-size: 0.8em;
+    }
 }

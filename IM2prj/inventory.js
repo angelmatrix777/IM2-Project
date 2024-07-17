@@ -1,3 +1,22 @@
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('session_info.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedin) {
+                if (!data.isAdmin) {
+                    adminDiv = document.querySelector('.buttons');
+                    if (adminDiv) {
+                        adminDiv.style.display = "none";
+                    }
+                }
+            } else {
+                alert("You are not logged in");
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
+
 document.addEventListener("DOMContentLoaded", function () {
     // Get the modal elements
     var updateStockModal = document.getElementById("updateStockModal");
@@ -135,4 +154,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 row.insertCell(6).innerText = item.price;
             });
         });
+});
+
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
 });

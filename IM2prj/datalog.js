@@ -1,3 +1,17 @@
+document.addEventListener('DOMContentLoaded', () => {
+  fetch('session_info.php')
+    .then(response => response.json())
+    .then(data => {
+      if (data.loggedin) {
+        if (!data.isAdmin) {}
+      } else {
+        alert("You are not logged in");
+        window.location.href = 'index.html'; // Redirect to login page if not logged in
+      }
+    })
+    .catch(error => console.error('Error fetching session info:', error));
+});
+
 fetch('datalog.php')
   .then(response => response.json())
   .then(data => {
@@ -49,3 +63,7 @@ fetch('datalog.php')
     populateTables();
   })
   .catch(error => console.error('Error:', error));
+
+  document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
+  });

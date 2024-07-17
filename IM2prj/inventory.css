@@ -8,12 +8,12 @@ body {
 }
 
 .header {
-    background-color: #5a67d8;
+    background-color: #6f1a07;
     color: white;
     align-items: center;
     display: flex;
     padding: 20px;
-    width:100%;
+    width: 100%;
     position: fixed;
     height: 5%;
     justify-content: center;
@@ -21,7 +21,8 @@ body {
 
 .container {
     display: flex;
-    flex: 1;
+    flex-direction: column;
+    height: 100vh;
 }
 
 .sidebar {
@@ -77,8 +78,7 @@ body {
     background-color: #edf2f7;
     overflow-y: auto;
     margin-left: 250px;
-    margin-top: 5% ;
-  
+    margin-top: 5%;
 }
 
 
@@ -96,16 +96,16 @@ body {
 
 .buttons {
     display: flex;
-    justify-content: flex-start; /* Align buttons to the left */
+    justify-content: flex-start; 
     margin-bottom: 20px;
 }
 
 .buttons button {
     display: flex;
     align-items: center;
-    margin-right: 10px; /* Add margin to the right of each button */
+    margin-right: 10px; 
     padding: 10px 20px;
-    background-color: #5a67d8;
+    background-color: #8f8073;
     color: white;
     border: none;
     border-radius: 5px;
@@ -113,7 +113,7 @@ body {
 }
 
 .buttons button .icon {
-    margin-right: 10px; /* Add margin between icon and text */
+    margin-right: 10px; 
 }
 
 .low-stock, .inventory {
@@ -188,7 +188,7 @@ form label {
 }
 
 form input {
-    width: calc(100% - 20px); /* Adjust width to account for padding */
+    width: calc(100% - 20px); 
     padding: 10px;
     margin-bottom: 15px;
     border-radius: 5px;
@@ -198,9 +198,36 @@ form input {
 
 form button {
     padding: 10px 20px;
-    background-color: #5a67d8;
+    background-color: #194630;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+@media (max-width: 1200px) {
+    .sidebar {
+        width: 200px;
+    }
+    .main-content {
+        margin-left: 200px;
+    }
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        width: 150px;
+    }
+    .main-content {
+        margin-left: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100px;
+    }
+    .main-content {
+        margin-left: 100px;
+    }
 }

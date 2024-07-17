@@ -7,8 +7,25 @@ body {
     height: 100vh;
 }
 
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-top: 0;
+        position: relative;
+    }
+
+    .main-content {
+        margin-left: 0;
+        margin-top: 5%;
+    }
+}
+
 .header {
-    background-color: #5a67d8;
+    background-color: #6f1a07;
     color: white;
     align-items: center;
     display: flex;

@@ -6,10 +6,15 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #ffffff;
+    background-image: url(images/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .container {
-    background-color: #6C63FF;
+    background-color: #8f8073;
     padding: 40px;
     border-radius: 40px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -21,6 +26,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin: 0 auto;
 }
 
 h4, h2 {
@@ -38,14 +44,14 @@ h2{
 
 .input-group {
     display: flex;
-    flex-direction: column; /* Stack labels and inputs vertically */
-    margin-bottom: 15px; /* Space between input groups */
+    flex-direction: column;
+    margin-bottom: 15px;
 }
 
 label {
     color: white;
-    margin-bottom: 5px; /* Space between label and input */
-    text-align: left; /* Align label text to the left */
+    margin-bottom: 5px; 
+    text-align: left; 
 }
 
 input {
@@ -57,8 +63,8 @@ input {
 }
 
 button {
-    background-color: #4B47A9;
-    color: white;
+    background-color: #f7f3e3;
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 12px 24px;
@@ -68,7 +74,7 @@ button {
 }
 
 button:hover {
-    background-color: #3A3791;
+    background-color: #7a6d60;
 }
 
 p {
@@ -77,5 +83,33 @@ p {
 }
 
 a {
-    color: #FFD700;
+    color: white;
 }
+
+@media only screen and (max-width: 1200px) {
+    .container {
+         width: 60%;
+         max-width: 800px;
+     }
+ }
+ 
+ @media only screen and (max-width: 992px) {
+    .container {
+         width: 70%;
+         max-width: 900px;
+     }
+ }
+ 
+ @media only screen and (max-width: 768px) {
+    .container {
+         width: 80%;
+         max-width: 1000px;
+     }
+ }
+ 
+ @media only screen and (max-width: 576px) {
+    .container {
+         width: 90%;
+         max-width: 1200px;
+     }
+ }

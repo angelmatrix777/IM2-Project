@@ -1,8 +1,22 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('session_info.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedin) {
+                if (!data.isAdmin) {}
+            } else {
+                alert("You are not logged in");
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
+
+document.addEventListener("DOMContentLoaded", function () {
     // Send AJAX request to orders.php
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'orders.php', true);
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             try {
                 var orders = JSON.parse(xhr.responseText);
@@ -10,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 var tbody = ordersTable.getElementsByTagName('tbody')[0];
 
                 // Loop through each order and add a table row
-                orders.forEach(function(order) {
+                orders.forEach(function (order) {
                     var row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${order.order_id}</td>
@@ -33,4 +47,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     };
     xhr.send();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
 });

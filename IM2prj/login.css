@@ -13,15 +13,20 @@ body {
     width: 100%;
     height: 100vh;
     margin: 20px 0;
-    border-radius: 20px;
+    /* border-radius: 20px; */
     overflow: hidden;
-    background-color: white;
+    /* background-color: rgba(255, 255, 255, 0.7);  */
+    background-image: url(images/background.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
 }
 
 .left {
     flex: 0.8;
     padding: 60px;
-    padding-top: 20%;
+    padding-top: 13%;
     box-sizing: border-box;
     justify-content: center;
     text-align: center;
@@ -30,7 +35,7 @@ body {
 .right {
     flex: 1;
     position: relative;
-    background-color: #6C63FF;
+    background-color: #8f8073;
     color: white;
     display: flex;
     flex-direction: column;
@@ -38,7 +43,7 @@ body {
     align-items: center;
     padding: 40px;
     box-sizing: border-box;
-    border-radius: 10px 0 0 10px;
+    border-radius: 20px 0 0 20px;
     margin: 60px 0;
 }
 
@@ -52,14 +57,20 @@ h2 {
     margin-bottom: 20px;
 }
 
-p {
+.left p{
     font-size: 16px;
     line-height: 1.6;
     color: #333;
+    text-align: justify;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: white;
     text-align: center;
 }
 
-/* right */
 .input-group {
     width: 100%;
     margin-bottom: 15px;
@@ -80,8 +91,8 @@ input[type="email"], input[type="password"] {
 }
 
 form {
-    width: 80%; /* Adjust this percentage to make the form wider */
-    max-width: 500px; /* Ensure the form does not exceed this width */
+    width: 80%; 
+    max-width: 500px; 
     margin-right: 60px;
 }
 
@@ -95,8 +106,8 @@ form {
 }
 
 button {
-    background-color: #4B47A9;
-    color: white;
+    background-color: #f7f3e3;
+    color: black;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
@@ -105,7 +116,8 @@ button {
 }
 
 button:hover {
-    background-color: #3A3791;
+    background-color: #7a6d60;
+    ;
 }
 
 a {
@@ -118,8 +130,8 @@ a {
     top: 0;
     width: 10%;
     height: 100%;
-    background-color: #5a57b5; /* Darker shade of purple */
-    border-radius: 0 10px 10px 0;
+    background-color: #3a1f1a; 
+    /* border-radius: 0 10px 10px 0; */
 }
 
 @media (max-width: 800px) {
@@ -135,5 +147,75 @@ a {
 
     .right {
         border-radius: 10px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left, .right {
+        width: 100%;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .right {
+        border-radius: 10px;
+    }
+
+    .left p {
+        font-size: 14px;
+    }
+
+    .input-group {
+        margin-bottom: 10px;
+    }
+
+    button {
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 992px) {
+    .left p {
+        font-size: 12px;
+    }
+
+    .input-group {
+        margin-bottom: 8px;
+    }
+
+    button {
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .left p {
+        font-size: 10px;
+    }
+
+    .input-group {
+        margin-bottom: 6px;
+    }
+
+    button {
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .left p {
+        font-size: 8px;
+    }
+
+    .input-group {
+        margin-bottom: 4px;
+    }
+
+    button {
+        padding: 2px 4px;
     }
 }

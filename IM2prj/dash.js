@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('to-be-delivered-count').innerHTML = data.stats.delivered;
 
         document.getElementById('quantity-in-hand-count').innerHTML = data.summaries.quantity_in_hand;
-        document.getElementById('to-be-received-count').innerHTML = data.summaries.to_be_received;
-        document.getElementById('number-of-suppliers-count').innerHTML = data.summaries.number_of_suppliers;
+        document.getElementById('number-of-customers-count').innerHTML = data.summaries.number_of_customers;
+        document.getElementById('number-of-branches-count').innerHTML = data.summaries.number_of_branches;
         document.getElementById('number-of-categories-count').innerHTML = data.summaries.number_of_categories;
 
         const inventoryTable = document.getElementById('inventoryTable');
@@ -34,4 +34,21 @@ document.addEventListener('DOMContentLoaded', async function () {
     } catch (error) {
         console.error('Error:', error);
     }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('session_info.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedin) {
+            } else {
+                alert("You are not logged in");
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
 });

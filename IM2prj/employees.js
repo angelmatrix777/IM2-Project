@@ -1,3 +1,23 @@
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('session_info.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.loggedin) {
+                if (!data.isAdmin) {
+                    adminDiv = document.querySelector('.employeestoolbar');
+
+                    if (adminDiv) {
+                        adminDiv.style.display = "none";
+                    }
+                }
+            } else {
+                alert("You are not logged in");
+                window.location.href = 'index.html'; // Redirect to login page if not logged in
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     fetchEmployees();
 
@@ -34,12 +54,12 @@ function fetchEmployees() {
             'action': 'fetch'
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        let tableBody = document.getElementById('employeesrecordTableBody');
-        tableBody.innerHTML = '';
-        data.forEach(employee => {
-            let row = `<tr>
+        .then(response => response.json())
+        .then(data => {
+            let tableBody = document.getElementById('employeesrecordTableBody');
+            tableBody.innerHTML = '';
+            data.forEach(employee => {
+                let row = `<tr>
                 <td>${employee.id}</td>
                 <td>${employee.last_name}</td>
                 <td>${employee.first_name}</td>
@@ -48,10 +68,10 @@ function fetchEmployees() {
                 <td>${employee.department}</td>
                 <td>${employee.permission}</td>
             </tr>`;
-            tableBody.innerHTML += row;
-        });
-    })
-    .catch(error => console.error('Error:', error));
+                tableBody.innerHTML += row;
+            });
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function displayEmployees(employees) {
@@ -76,6 +96,48 @@ function displayEmployees(employees) {
         tbody.appendChild(tr);
     });
 }
+
+function employeessearchRecord() {
+    const searchInput = document.getElementById('employeessearchInput').value.toLowerCase();
+    const tableBody = document.getElementById('employeesrecordTableBody');
+    const rows = tableBody.getElementsByTagName('tr');
+    const searchResultsDiv = document.querySelector('.employeessearch-results');
+    let searchResultsHTML = '';
+
+    for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        const id = cells[0].textContent.toLowerCase();
+        const firstName = cells[1].textContent.toLowerCase();
+        const lastName = cells[2].textContent.toLowerCase();
+
+        if (id.includes(searchInput) || firstName.includes(searchInput) || lastName.includes(searchInput)) {
+            searchResultsHTML = `
+                <div class="employeesearch-result-item">
+                    <div class="employeecolumn-name">
+                        <p style="font-size:30px; margin-bottom:0px"><strong> ${capitalize(firstName)} ${capitalize(lastName)}</strong></p>
+                        <p><strong>Contact Number:</strong><br> ${cells[3].textContent}</p>
+                    </div>
+                    <div class="employeecolumn details">
+                        <p><strong>Employee ID:</strong><br> ${id}</p>
+                        <p><strong>Email:</strong><br> ${cells[4].textContent}</p>
+                    </div>
+                    <div class="employeecolumn status">
+                        <p><strong>Department:</strong><br> ${cells[5].textContent}</p>
+                        <p><strong>Role:</strong><br> ${cells[6].textContent}</p>
+                    </div>
+                </div>
+                <hr class="divider">`;
+            break;
+        }
+    }
+
+    searchResultsDiv.innerHTML = searchResultsHTML;
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 
 function editEmployee(id) {
     const employee = document.getElementById(`employee-${id}`);
@@ -159,3 +221,7 @@ function employeesconfirmDelete() {
     };
     xhr.send(`action=delete&id=${id}`);
 }
+
+document.getElementById('logoutBtn').addEventListener('click', function () {
+    window.location.href = 'index.html';
+});

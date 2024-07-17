@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
     const rememberMeCheckbox = document.querySelector('input[type="checkbox"]');
+    const errorMessage = document.getElementById('error-message');
 
     // Load saved email and password
     if (localStorage.getItem('rememberMe') === 'true') {
@@ -12,34 +13,48 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Form submission event
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const email = emailInput.value.trim();
         const password = passwordInput.value.trim();
 
         // Validate form
         if (!email || !password) {
-            alert('Please fill in both email and password.');
+            errorMessage.textContent = 'Please fill in both email and password.';
+            errorMessage.style.display = 'block';
             return;
         }
 
-        // Simulate validation (replace this with your actual validation logic)
-        if (validateLogin(email, password)) {
-            // Remember Me functionality
-            if (rememberMeCheckbox.checked) {
-                localStorage.setItem('email', email);
-                localStorage.setItem('password', password);
-                localStorage.setItem('rememberMe', 'true');
-            } else {
-                localStorage.removeItem('email');
-                localStorage.removeItem('password');
-                localStorage.removeItem('rememberMe');
-            }
+        try {
+            const response = await fetch('login.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ email, password })
+            });
 
-            // Redirect to dash.html
-            window.location.href = 'dash.html';
-        } else {
-            alert('Invalid email or password. Please try again.');
+            const result = await response.json();
+
+            if (result.success) {
+                // Remember Me functionality
+                if (rememberMeCheckbox.checked) {
+                    localStorage.setItem('email', email);
+                    localStorage.setItem('password', password);
+                    localStorage.setItem('rememberMe', 'true');
+                } else {
+                    localStorage.removeItem('email');
+                    localStorage.removeItem('password');
+                    localStorage.removeItem('rememberMe');
+                }
+
+                window.location.href = 'dash.html';
+
+            } else {
+                errorMessage.textContent = result.message;
+                errorMessage.style.display = 'block';
+            }
+        } catch (error) {
+            errorMessage.textContent = 'An error occurred. Please try again.';
+            errorMessage.style.display = 'block';
         }
     });
 
@@ -49,9 +64,4 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
         alert('Password recovery instructions have been sent to your email.');
     });
-
-    function validateLogin(email, password) {
-        // Example validation (replace with your actual validation logic)
-        return email === 'test@example.com' && password === 'password123';
-    }
 });

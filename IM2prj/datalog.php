@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+require_once 'db.php';
 
 // Fetch data from DATA_LOGS_SALES
 $salesQuery = "SELECT time, employee_id AS employeeId, employee_name AS employeeName, task FROM DATA_LOGS_SALES";
