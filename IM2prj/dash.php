@@ -27,7 +27,7 @@ $result = $conn->query($sql);
 $response['summaries'] = $result->fetch_assoc();
 
 // Query for inventory
-$sql = "SELECT product_code, wood_type, size, unit, quantity, location, price FROM INVENTORY WHERE visible = 1";
+$sql = "SELECT product_code, wood_type, size, quantity, location, price FROM INVENTORY WHERE visible = 1";
 $result = $conn->query($sql);
 while ($row = $result->fetch_assoc()) {
     $response['inventory'][] = $row;
@@ -37,3 +37,4 @@ header('Content-Type: application/json');
 echo json_encode($response);
 
 $conn->close();
+?>

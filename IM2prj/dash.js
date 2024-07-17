@@ -20,16 +20,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('number-of-branches-count').innerHTML = data.summaries.number_of_branches;
         document.getElementById('number-of-categories-count').innerHTML = data.summaries.number_of_categories;
 
-        const inventoryTable = document.getElementById('inventoryTable');
+        const inventoryTable = document.getElementById('inventoryTable').getElementsByTagName('tbody')[0];
         data.inventory.forEach((item) => {
             const row = inventoryTable.insertRow();
             row.insertCell(0).innerText = item.product_code;
             row.insertCell(1).innerText = item.wood_type;
             row.insertCell(2).innerText = item.size;
-            row.insertCell(3).innerText = item.unit;
-            row.insertCell(4).innerText = item.quantity;
-            row.insertCell(5).innerText = item.location;
-            row.insertCell(6).innerText = item.price;
+            row.insertCell(3).innerText = item.quantity;
+            row.insertCell(4).innerText = item.location;
+            row.insertCell(5).innerText = item.price;
         });
     } catch (error) {
         console.error('Error:', error);
@@ -41,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.loggedin) {
+                // User is logged in, no action needed
             } else {
                 alert("You are not logged in");
                 window.location.href = 'index.html'; // Redirect to login page if not logged in
