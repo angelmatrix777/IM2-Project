@@ -120,11 +120,11 @@ VALUES
 -- Insert data into CUSTOMERS table
 INSERT INTO CUSTOMERS (id, name, contact_number, email, credibility_status, visible)
 VALUES
-(1, 'Pedro Cruz', '09201234567', 'pedro.cruz@example.com', 'Good', 1),
-(2, 'Ana Lopez', '09211234567', 'ana.lopez@example.com', 'Excellent', 1),
-(3, 'Luis Santos', '09221234567', 'luis.santos@example.com', 'Average', 1),
-(4, 'Maria Clara', '09231234567', 'maria.clara@example.com', 'Good', 1),
-(5, 'Jose Rizal', '09241234567', 'jose.rizal@example.com', 'Poor', 1);
+(1, 'Pedro Cruz', '09201234567', 'pedro.cruz@example.com', 1, 1),
+(2, 'Ana Lopez', '09211234567', 'ana.lopez@example.com', 1, 1),
+(3, 'Luis Santos', '09221234567', 'luis.santos@example.com', 0, 1),
+(4, 'Maria Clara', '09231234567', 'maria.clara@example.com', 1, 1),
+(5, 'Jose Rizal', '09241234567', 'jose.rizal@example.com', 0, 1);
 
 -- Insert data into DATA_LOGS_SALES table
 INSERT INTO DATA_LOGS_SALES (time, employee_id, employee_name, task)
